@@ -1,0 +1,126 @@
+
+import java.util.*;
+
+public class bingo {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		// 1.亂數產生組1-25
+		int[] mynum = new int[25];
+		randomtogroup(mynum);
+		System.out.println("\n 我的號碼");
+		shownum(mynum);
+		//開獎
+		int[] opennum = new int[25];
+		randomtogroup(opennum);
+		ArrayList<Integer> checknum=new ArrayList<Integer>();
+		for(int i=0;i<opennum.length;i++){
+			for(int j=0;j<mynum.length;j++){
+				if(opennum[i]==mynum[j]){
+					checknum.add(j);
+				}
+			}
+			if(checknum.size()>13){
+				if (rulecheck(checknum)>=3){
+					System.out.println("開獎號碼");
+					for(int j=0;j<checknum.size();j++){
+						System.out.print("["+checknum.get(j)+"] "+mynum[checknum.get(j)]+" ");
+					}
+					break;
+				}
+			}
+		}
+
+	}
+
+	public static void randomtogroup(int[] num) {
+		Random rn = new Random();
+		int temp = 0;
+		// 1.亂數
+		// 1.1 初始化
+		num[0] = rn.nextInt(25);
+		// 1.2亂數不重複
+		for (int i = 1; i < 25; i++) {
+			boolean TF = true;// 是否重複
+			while (TF == true) {
+				TF = false;
+				temp = rn.nextInt(25);
+				for (int j = 0; j < i; j++) {
+					if (temp == num[j]) {
+						TF = true;
+					}
+				}
+				if (TF == false) {
+					num[i] = temp;
+					break;
+				}
+
+			}
+
+		}
+	}
+
+	public static void shownum(int show[]) {
+		for (int i = 0; i < show.length; i++) {
+			System.out.print("[" + (i) + "]:" + show[i] + "\t");
+			if ((i + 1) % 5 == 0) {
+				System.out.println("");
+			}
+		}
+	}
+
+	public static int rulecheck(ArrayList<Integer> arr) {
+		int count = 0;
+		// rule
+		for (int i = 0; i < arr.size(); i++) {
+			// rule1 4 5 6
+			// rule1
+			if (arr.get(i) == 0 || arr.get(i) == 5 || arr.get(i) == 10
+					|| arr.get(i) == 15 || arr.get(i) == 20) {
+				if (rule(1, arr.get(i), arr) == true) {
+					count++;
+				}
+			}
+			// rule4
+			if (arr.get(i) == 4) {
+				if (rule(4, arr.get(i), arr) == true) {
+					count++;
+				}
+			}
+			// rule5
+			if (arr.get(i) == 0 || arr.get(i) == 1 || arr.get(i) == 2
+					|| arr.get(i) == 3 || arr.get(i) == 4) {
+				if (rule(5, arr.get(i), arr) == true) {
+					count++;
+				}
+			}
+			// rule6
+			if (arr.get(i) == 0) {
+				if (rule(6, arr.get(i), arr) == true) {
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+
+	public static boolean rule(int userule, int basednum, ArrayList<Integer> arr) {
+		boolean checkhave = false;
+		for (int i = 1; i < 5; i++) {// 5五層
+			checkhave = false; // 每一層是否包含元素
+			// 判斷是否包含元素
+			for (int j = 0; j < arr.size(); j++) {
+				if (basednum + userule * i == arr.get(j)) {
+					checkhave = true;// 包含元素
+				}
+			}
+			// 只要一個不包含就中斷
+			if (checkhave == false) {
+				break;
+			}
+		}
+		return checkhave;
+	}
+
+}
